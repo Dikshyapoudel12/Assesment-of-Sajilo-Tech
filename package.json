@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "auth:setup": "playwright test --project=setup",
+    "test:auth": "playwright test --project=chromium --no-deps",
+    "test:auth:addtocart": "playwright test tests/e2e/addtocart.spec.ts --project=chromium --no-deps",
+    "test:api:authentication": "playwright test tests/api/authentication.spec.ts --no-deps",
+    "test:api:authorization": "playwright test tests/api/authorization.spec.ts --no-deps",
+    "test:api:auth": "playwright test tests/api/*.spec.ts --no-deps"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -11,10 +18,12 @@
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.4.0",
+    "dotenv": "^17.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.9.0",
     "axios": "^1.13.6"
   }
 }

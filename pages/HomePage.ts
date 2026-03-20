@@ -1,5 +1,21 @@
 import { Page, Locator, expect } from '@playwright/test';
 
+type SignupUser = {
+  name: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  address1: string;
+  address2: string;
+  state: string;
+  city: string;
+  zipcode: string;
+  mobile: string;
+};
+
+type LoginUser = Pick<SignupUser, 'email' | 'password'>;
+
 export class HomePage {
   readonly page: Page;
   readonly signupLoginLink: Locator;
@@ -55,47 +71,48 @@ export class HomePage {
     this.loggedInUserText = page.locator('a:has-text("Logged in as") b');
 
   }
+
   async gotoHomePage() {
     await this.page.goto('/');
+    await expect(this.signupLoginLink).toBeVisible();
   }
 
   async clickSignupLogin() {
     await this.signupLoginLink.click();
+    await expect(this.page).toHaveURL(/\/login/);
   }
 
-async signup(user: any) {
+  async signup(user: SignupUser) {
+    await this.signupNameInput.fill(user.name);
+    await this.signupEmailInput.fill(user.email);
+    await this.signupButton.click();
 
-  await this.signupNameInput.fill(user.name);
-  await this.signupEmailInput.fill(user.email);
-  await this.signupButton.click();
-  await this.genderRadioButton.check();
-  await this.passwordInput.fill(user.password);
-  await this.firstNameInput.fill(user.firstName);
-  await this.lastNameInput.fill(user.lastName);
-  await this.addressOneInput.fill(user.address1);
-  await this.addressTwoInput.fill(user.address2);
-  await this.countrySelect.selectOption('United States');
-  await this.stateInput.fill(user.state);
-  await this.cityInput.fill(user.city);
-  await this.zipcodeInput.fill(user.zipcode);
-  await this.mobileNumberInput.fill(user.mobile);
-  await this.createAccountButton.click();
-  await expect(this.successMessage).toBeVisible();
-  await expect(this.continueButton).toBeVisible();
-  await this.continueButton.click();
-  //await expect(this.loggedInUserText).toHaveText(`Logged in as ${user.name}`);
-  //await this.logoutselector.click();
+    await expect(this.genderRadioButton).toBeVisible();
+    await this.genderRadioButton.check();
+    await this.passwordInput.fill(user.password);
+    await this.firstNameInput.fill(user.firstName);
+    await this.lastNameInput.fill(user.lastName);
+    await this.addressOneInput.fill(user.address1);
+    await this.addressTwoInput.fill(user.address2);
+    await this.countrySelect.selectOption({ label: 'United States' });
+    await this.stateInput.fill(user.state);
+    await this.cityInput.fill(user.city);
+    await this.zipcodeInput.fill(user.zipcode);
+    await this.mobileNumberInput.fill(user.mobile);
+    await this.createAccountButton.click();
 
-}
+    await expect(this.successMessage).toBeVisible();
+    await expect(this.continueButton).toBeVisible();
+    await this.continueButton.click();
+    await expect(this.loggedInUserText).toBeVisible();
+  }
 
-async login(user: any) {
+  async login(user: LoginUser) {
     await this.gotoHomePage();
     await this.clickSignupLogin();
     await this.loginEmailInput.fill(user.email);
     await this.loginPasswordInput.fill(user.password);
     await this.loginButton.click();
+    await expect(this.loggedInUserText).toBeVisible();
   }
-
-
-
 }

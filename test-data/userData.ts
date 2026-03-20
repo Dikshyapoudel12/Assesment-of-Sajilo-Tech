@@ -1,16 +1,20 @@
+import { faker } from '@faker-js/faker';
 
 export const createUserData = () => {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+
   return {
-  name: 'Dikshya Paudel',
-  email: `deekshyap${Date.now()}@test.com`,
-  password: 'password123',
-  firstName: 'Dikshya',
-  lastName: 'Paudel',
-  address1: 'Kathmandu',
-  address2: 'Baneshwor',
-  state: 'Kathmandu',
-  city: 'Kathmandu',
-  zipcode: '466004',
-  mobile: '1234567890'
+    name: `${firstName} ${lastName}`,
+    email: `${firstName.toLowerCase()}${Date.now()}@test.com`, 
+    password: 'password123',
+    firstName,
+    lastName,
+    address1: faker.location.streetAddress(),
+    address2: faker.location.secondaryAddress(),
+    state: faker.location.state(),
+    city: faker.location.city(),
+    zipcode: faker.location.zipCode(),
+    mobile: faker.string.numeric(10)
   };
 };
